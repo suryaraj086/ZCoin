@@ -31,6 +31,7 @@ public class ExchangeRunner {
 				try {
 					user = ObjectSetter.userSetter(name, email, mobile, password1, 100, false, hid);
 					obj.checkPassword(password, password1, user);
+					obj.userSignup(user);
 					System.out.println("Created successfully");
 				} catch (Exception e) {
 					System.out.println(e.getMessage());
@@ -38,6 +39,7 @@ public class ExchangeRunner {
 				break;
 
 			case 2:
+				scan.nextLine();
 				System.out.println("Enter email id");
 				String emailid = scan.nextLine();
 				System.out.println("Confirm the password");
@@ -55,13 +57,25 @@ public class ExchangeRunner {
 					switch (num) {
 					case 1:
 						System.out.println(obj.listUser());
+						int approve = scan.nextInt();
+						if (approve == 0) {
+							continue;
+						}
+						try {
+							obj.allowUser(approve);
+						} catch (Exception e1) {
+							System.out.println(e1.getMessage());
+							continue;
+						}
+						System.out.println("Approved");
 						break;
-
+					case 2:
+						System.out.println(obj.listTransaction());
+						break;
 					default:
 						break;
 					}
 					break;
-
 				case "Customer":
 					System.out.println(
 							"1.Show details\n2.Transaction History\n3.RC Transaction\n4.Zcoin Transaction\n5.Transfer to another zid");
@@ -76,18 +90,23 @@ public class ExchangeRunner {
 					case 3:
 						System.out.println("Enter amount");
 						int amount1 = scan.nextInt();
-						TransactionHistory History = new TransactionHistory();
+						TransactionHistory History = ObjectSetter.transactionHistory(System.currentTimeMillis(),
+								amount1, "Rc to zcoin transaction");
+
 						try {
 							obj.currencyToZCoin(emailid, amount1, History);
 						} catch (Exception e) {
 							System.out.println(e.getMessage());
+							continue;
 						}
 						System.out.println("Transaction successfull");
 						break;
 					case 4:
 						System.out.println("Enter amount");
 						int amount2 = scan.nextInt();
-						TransactionHistory traHistory = new TransactionHistory();
+						TransactionHistory traHistory = ObjectSetter.transactionHistory(System.currentTimeMillis(),
+								amount2, "Zcoin to Rc transaction");
+
 						try {
 							obj.zCoinToCurrency(emailid, amount2, traHistory);
 						} catch (Exception e) {
@@ -110,8 +129,8 @@ public class ExchangeRunner {
 				bool = false;
 				break;
 			}
-
 		}
+		scan.close();
 	}
 
 }

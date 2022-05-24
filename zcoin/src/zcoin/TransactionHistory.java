@@ -1,5 +1,7 @@
 package zcoin;
 
+import java.util.Date;
+
 public class TransactionHistory {
 
 	private String transaction;
@@ -32,7 +34,8 @@ public class TransactionHistory {
 
 	@Override
 	public String toString() {
-		return "TransactionHistory [transaction=" + transaction + ", time=" + time + ", amount=" + amount + "]";
+		Date d = new Date(time);
+		return "TransactionHistory [transaction=" + transaction + ", time=" + d + ", amount=" + amount + "]";
 	}
 
 }

@@ -21,10 +21,12 @@ public class Zcoin {
 		user.setAdmin(true);
 		login.put("s@123.com", user);
 		User user1 = new User();
-		user.setEmailId("s@123.com");
-		user.setPassword("123");
-		user.setAdmin(true);
-		login.put("s@123.com", user);
+		user1.setEmailId("s@12.com");
+		user1.setPassword("123");
+		user1.setAdmin(false);
+		login.put("s@12.com", user1);
+		Account acc = ObjectSetter.accountSetter(1234, 100, 100, 0);
+		account.put(user1.getEmailId(), acc);
 	}
 
 	public String getLogin(String email, String password) throws Exception {
@@ -36,6 +38,10 @@ public class Zcoin {
 			return "Customer";
 		}
 		return "Invalid user";
+	}
+
+	public void userSignup(User data) {
+		signup.add(data);
 	}
 
 	public void nullChecker(Object inp) throws Exception {
@@ -61,6 +67,17 @@ public class Zcoin {
 		return output;
 	}
 
+	public String listTransaction() {
+		String out = "";
+		for (List<TransactionHistory> arr : transaction.values()) {
+			int size = arr.size();
+			for (int i = 0; i < size; i++) {
+				out += arr.get(i);
+			}
+		}
+		return out;
+	}
+
 	public void zCoinToCurrency(String email, int amount, TransactionHistory transfer) throws Exception {
 		Account acc = account.get(email);
 		int balance = acc.getzCoinBalance();
@@ -76,6 +93,7 @@ public class Zcoin {
 			temp = new ArrayList<>();
 		}
 		temp.add(transfer);
+		transaction.put(email, temp);
 	}
 
 	public void balanceChecker(int balance, int amount) throws Exception {
@@ -97,6 +115,7 @@ public class Zcoin {
 			temp = new ArrayList<>();
 		}
 		temp.add(transfer);
+		transaction.put(email, temp);
 	}
 
 	public String userDetails(String email) {
@@ -110,6 +129,7 @@ public class Zcoin {
 	public String listUserHistory(String email) {
 		List<TransactionHistory> data = transaction.get(email);
 		String out = "";
+		System.out.println(data);
 		for (int i = 0; i < data.size(); i++) {
 			out += data.get(i).toString();
 		}
@@ -134,7 +154,6 @@ public class Zcoin {
 
 	public void checkPassword(String password, String password1, User data) throws Exception {
 		if (password.equals(password1)) {
-
 			if (password.contains(data.getFullName()) || password.contains(data.getEmailId())
 					|| password.contains("" + data.getMobileNumber()) || password.length() < 8) {
 				throw new Exception("Invalid password");
@@ -144,5 +163,4 @@ public class Zcoin {
 		}
 		throw new Exception("Invalid password");
 	}
-
 }
