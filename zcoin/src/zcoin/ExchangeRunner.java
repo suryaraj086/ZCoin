@@ -6,7 +6,12 @@ public class ExchangeRunner {
 
 	public static void main(String[] args) {
 		Scanner scan = new Scanner(System.in);
-		Zcoin obj = new Zcoin();
+		Zcoin obj = null;
+		try {
+			obj = new Zcoin();
+		} catch (Exception e2) {
+			System.out.println(e2.getMessage());
+		}
 		boolean bool = true;
 		while (bool) {
 			System.out.println("1.Create new account\n2.Login");
@@ -78,7 +83,7 @@ public class ExchangeRunner {
 					break;
 				case "Customer":
 					System.out.println(
-							"1.Show details\n2.Transaction History\n3.RC Transaction\n4.Zcoin Transaction\n5.Transfer to another zid");
+							"1.Show details\n2.Transaction History\n3.RC Transaction\n4.Zcoin Transaction\n5.Transfer to another zid\n6.Change password");
 					int num1 = scan.nextInt();
 					switch (num1) {
 					case 1:
@@ -115,6 +120,19 @@ public class ExchangeRunner {
 						System.out.println("Transaction successful");
 						break;
 
+					case 6:
+						scan.nextLine();
+						System.out.println("Enter the password");
+						String pass1 = scan.nextLine();
+						System.out.println("Confirm the password");
+						String pass2 = scan.nextLine();
+						try {
+							obj.checkPassword(pass2, pass1, obj.login.get(emailid));
+							obj.changePassword(emailid, pass2);
+						} catch (Exception e) {
+							System.out.println(e.getMessage());
+						}
+						break;
 					default:
 						break;
 					}

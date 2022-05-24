@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 public class Zcoin {
+
 	Map<String, User> login = new HashMap<>();
 	List<User> signup = new ArrayList<>();
 	Map<String, Account> account = new HashMap<>();
@@ -14,16 +15,13 @@ public class Zcoin {
 	int zId = 0;
 	int exchange = 2;
 
-	public Zcoin() {
+	public Zcoin() throws Exception {
 		User user = new User();
 		user.setEmailId("s@123.com");
 		user.setPassword("123");
 		user.setAdmin(true);
 		login.put("s@123.com", user);
-		User user1 = new User();
-		user1.setEmailId("s@12.com");
-		user1.setPassword("123");
-		user1.setAdmin(false);
+		User user1 = ObjectSetter.userSetter("s", "s@12.com", 3513513, "123", 100, false, 0);
 		login.put("s@12.com", user1);
 		Account acc = ObjectSetter.accountSetter(1234, 100, 100, 0);
 		account.put(user1.getEmailId(), acc);
@@ -88,12 +86,17 @@ public class Zcoin {
 		int rc = acc.getCurrency() + (int) (deposit - value);
 		acc.setCurrency(rc);
 		acc.setzCoinBalance(balance);
+		addtoHistory(transfer, email);
+	}
+
+	public void addtoHistory(TransactionHistory transfer, String email) {
 		List<TransactionHistory> temp = transaction.get(email);
 		if (temp == null) {
 			temp = new ArrayList<>();
 		}
 		temp.add(transfer);
 		transaction.put(email, temp);
+
 	}
 
 	public void balanceChecker(int balance, int amount) throws Exception {
@@ -110,12 +113,7 @@ public class Zcoin {
 		int rc = acc.getCurrency() - amount;
 		acc.setCurrency(rc);
 		acc.setzCoinBalance(balance);
-		List<TransactionHistory> temp = transaction.get(email);
-		if (temp == null) {
-			temp = new ArrayList<>();
-		}
-		temp.add(transfer);
-		transaction.put(email, temp);
+		addtoHistory(transfer, email);
 	}
 
 	public String userDetails(String email) {
@@ -158,7 +156,6 @@ public class Zcoin {
 					|| password.contains("" + data.getMobileNumber()) || password.length() < 8) {
 				throw new Exception("Invalid password");
 			}
-			data.setPassword(password);
 			return;
 		}
 		throw new Exception("Invalid password");
